@@ -5,11 +5,9 @@
 
 #if (NGX_FREEBSD)
 #error FreeBSD is not supported yet, sorry.
-#elif (NGX_LINUX)
-#include <uuid.h>      
 #elif (NGX_SOLARIS)
 #error Solaris is not supported yet, sorry.
-#elif (NGX_DARWIN)
+#elif (NGX_DARWIN|NGX_LINUX)
 #include <uuid/uuid.h>      
 #endif
 
@@ -27,24 +25,9 @@ ngx_int_t ngx_x_rid_header_get_variable(ngx_http_request_t *r, ngx_http_variable
       
 #if (NGX_FREEBSD)
 #error FreeBSD is not supported yet, sorry.
-#elif (NGX_LINUX)
-  uuid_t* uuid;
-  if ( uuid_create(&uuid) ) {
-    return -1;
-  }
-  if ( uuid_make(uuid, UUID_MAKE_V4) ) {
-    uuid_destroy(uuid);
-    return -1;
-  }
-  size_t data_len = 37;
-  if ( uuid_export(uuid, UUID_FMT_STR, &p, &data_len) ) {
-    uuid_destroy(uuid);
-    return -1;
-  }
-  uuid_destroy(uuid);
 #elif (NGX_SOLARIS)
 #error Solaris is not supported yet, sorry.
-#elif (NGX_DARWIN)
+#elif (NGX_DARWIN|NGX_LINUX)
   uuid_t uuid;
   uuid_generate(uuid);       
   uuid_unparse_lower(uuid, (char*)p);
